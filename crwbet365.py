@@ -52,6 +52,7 @@ def list_sort(market_list):
 
 
 def export_match_data(match_name, match_data):
+    # sourcery skip: extract-duplicate-method
     # base_dict = base_structue()
     # base_dict["time"] = str(datetime.datetime.now())
     # base_dict["match_name"] = match_name
@@ -236,8 +237,8 @@ def export_match_data(match_name, match_data):
         }
 
         final_match_data.append(base_dict)
-
-    with open("game_data.json", "w", encoding="utf-8") as file:
+    file_name= datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    with open(f"game_data/{file_name}.json", "w", encoding="utf-8") as file:
         json.dump(final_match_data, file, indent=4)
 
 
@@ -252,17 +253,16 @@ def run_driver(driver_num, queue):
         # Add your automation code for the driver here
 
         # if driver:
-        result = {"result_value": []}
-        if driver_num == 0:
-            result["result_value"] = get_main_market_data(driver, True)
-        else:
-            result["result_value"] = get_main_market_data(driver, False)
-
+        result = {
+            "result_value": get_main_market_data(driver, True)
+            if driver_num == 0
+            else get_main_market_data(driver, False)
+        }
         driver.quit()
 
         queue.put(result)
-        # else:
-        #     driver.quit()# Put the result in the queue
+            # else:
+            #     driver.quit()# Put the result in the queue
 
     except Exception as e:
         # Set the exception flag and propagate the exception
@@ -289,5 +289,7 @@ while not result_queue.empty():
     match_name = result.get("result_value")[0]
     match_data.append(result.get("result_value")[1])
     results.append(result)
-
-export_match_data(match_name, match_data)
+if match_data:
+    export_match_data(match_name, match_data)
+else:
+    print("Err: No match data")

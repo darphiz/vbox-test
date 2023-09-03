@@ -17,7 +17,7 @@ def remove_loader(driver):
 
 
 def driver_code(driver_num):
-    print("in driver")
+    print("starting driver")
     Capabilities = DesiredCapabilities.CHROME
     Capabilities["pageLoadStrategy"] = "normal"
     options = ChromeOptions()
@@ -82,10 +82,7 @@ def selector_finder(driver, selector_type, selector, flag=False):
     selector = WebDriverWait(driver, 15).until(
         EC.presence_of_all_elements_located((selector_type, selector))
     )
-    if flag:
-        TOTAL_COUNT = len(selector)
-        return selector, TOTAL_COUNT
-    return selector
+    return (selector, len(selector)) if flag else selector
 
 
 def open_new_tab(driver, url):
@@ -98,13 +95,14 @@ def open_new_tab(driver, url):
     #     driver.execute_script(
     #         f"""window.open('https://www.bet365.com.au/#/AC/B36/C20856562/D48/E1/F36/', "_blank");"""
     #     )
-
+    print("opening new tab...")
     time.sleep(10)
     driver.close()
     driver.switch_to.window(driver.window_handles[-1])
 
 
 def click_on_match_data(driver, selector, i=0):
+    print("clicking on match data...")
     selector[i].click()
 
 
@@ -113,10 +111,12 @@ def based_on_selector_click(selector):
 
 
 def remove_cookies(driver):
+    print("removing cookies...")
     driver.find_element(By.CLASS_NAME, "ccm-CookieConsentPopup_Accept").click()
 
 
 def match_selector(driver):
+    print("selecting match...")
     time.sleep(5)
     driver.find_element(By.CSS_SELECTOR,".crm-RibbonItemLeague_Afl",).click()
 
@@ -126,6 +126,7 @@ def match_selector(driver):
 
 
 def get_match_counter(driver):
+    print("getting match counter...")
     time.sleep(2)
     return selector_finder(
                    driver,
