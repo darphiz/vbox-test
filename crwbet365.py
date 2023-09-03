@@ -1,11 +1,11 @@
 import datetime
 import json
-import os
+# import os
 import threading
 from multiprocessing import Queue
-from threading import Thread
+# from threading import Thread
 
-from selenium.webdriver.support.wait import WebDriverWait
+# from selenium.webdriver.support.wait import WebDriverWait
 
 from base import driver_code
 from market_data import get_main_market_data
@@ -248,8 +248,7 @@ exception_flag = threading.Event()
 
 def run_driver(driver_num, queue):
     try:
-
-        driver = driver_code(driver_num)  # You can use any Selenium WebDriver here
+        driver = driver_code(1)  # You can use any Selenium WebDriver here
         # Add your automation code for the driver here
 
         # if driver:
@@ -289,6 +288,7 @@ while not result_queue.empty():
     match_name = result.get("result_value")[0]
     match_data.append(result.get("result_value")[1])
     results.append(result)
+
 if match_data:
     export_match_data(match_name, match_data)
 else:

@@ -1,22 +1,19 @@
 import time, os
+import chromedriver_autoinstaller
 
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 def remove_loader(driver):
     driver.execute_script("document.querySelector('.bl-Preloader').remove();")
 
 
-def driver_code(driver_num):
+def driver_code(driver_num):  # sourcery skip: extract-duplicate-method
     print("starting driver")
     Capabilities = DesiredCapabilities.CHROME
     Capabilities["pageLoadStrategy"] = "normal"
@@ -37,8 +34,10 @@ def driver_code(driver_num):
     options.add_argument("disable-infobars")
     options.add_argument("disable-blink-features=AutomationControlled")
 
+    # add proxy
+    options.add_argument("--proxy-server=http://localhost:9081")
+    chromedriver_autoinstaller.install()
     driver = webdriver.Chrome(
-        "./chromedriver",
         options=options,
         desired_capabilities=Capabilities,
     )
@@ -51,30 +50,13 @@ def driver_code(driver_num):
     )
 
     options.add_argument("--disable-popup-blocking")
-    #     driver.execute_script(
-    #         """setTimeout(() => window.location.href="https://www.bet365.com.au", 100)"""
-    #     )
-    driver.get("https://www.bet365.com.au")
-
     driver.set_window_size(390, 844)
-
-    # try:
-    #     selector=driver.find_element(By.ID, 'msg_ln_1')
-    #     return None
-    # except :
+    time.sleep(5)
+    driver.get("https://www.bet365.com.au")
 
     time.sleep(5)
     remove_loader(driver)
     return driver
-
-
-    # if  not driver.find_element(By.ID,'msg_ln_1'):
-    #
-    #     driver.save_screenshot("/home/ubuntu/Scraping_Bet365/scree.png")
-    #     time.sleep(5)
-    #     remove_loader(driver)
-    #     return driver
-    # return None
 
 
 
